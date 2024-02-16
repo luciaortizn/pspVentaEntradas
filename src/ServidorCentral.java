@@ -12,12 +12,22 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class ServidorCentral {
 
@@ -50,14 +60,14 @@ public class ServidorCentral {
 	public ServidorCentral() {
 		initialize();
 
-		new Thread(() -> {
-			// hilo
-			try {
-				startServer();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}).start();
+			new Thread(() -> {
+			 
+				try {
+					startServer();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}).start();
 	}
 
 	/**
@@ -224,13 +234,14 @@ public class ServidorCentral {
 
 	}
 	public static void cambiarTotal(Socket socket, BufferedReader bufferedReader,JTextField txt1, JTextField txt2, JTextField txt3) throws IOException {
+
 		ReentrantLock lock = new ReentrantLock();
 		int cantidad;
 		String tipoEntradaString = bufferedReader.readLine();
 		String entradaSinCorchetes = tipoEntradaString.replace("[", "").replace("]", "").trim();
 		//System.out.println(tipoEntradaString);
 		cantidad = Integer.parseInt(bufferedReader.readLine());
-		
+		String tipo = ""; 
 		int nuevoTotal = Integer.valueOf(Integer.parseInt(lblTotalEntradas.getText().trim()) - cantidad);
 		lock.lock();
 		lblTotalEntradas.setText("" + nuevoTotal);
@@ -239,6 +250,7 @@ public class ServidorCentral {
 
 		switch (entradaSinCorchetes) {
 		case "Entrada general":
+			tipo ="Entrada general";
 			precio = 10;
 			lock.lock();
 			txt1.setText(""+Integer.valueOf(Integer.parseInt(txt1.getText())+ precio*cantidad));
@@ -246,6 +258,7 @@ public class ServidorCentral {
 			System.out.println(precio);
 			break;
 		case "Entrada VIP":
+			tipo = "Entrada VIP";
 			precio = 20;
 			lock.lock();
 			txt2.setText(""+Integer.valueOf(Integer.parseInt(txt2.getText())+ precio*cantidad));
@@ -254,6 +267,7 @@ public class ServidorCentral {
 			break;
 
 		case "Abono VIP":
+			tipo ="Abono VIP";
 			lock.lock();
 			txt3.setText(""+Integer.valueOf(Integer.parseInt(txt3.getText())+precio*cantidad));
 			lock.unlock();
@@ -264,6 +278,34 @@ public class ServidorCentral {
 		
 	    lock.lock();
 		lblFT_int.setText( "" +Integer.valueOf(Integer.parseInt(lblFT_int.getText())+cantidad*precio) );
+		//genero
+		generarPDF(precio, cantidad, tipo);
 		lock.unlock();
+	}
+	public static void generarPDF(int precio, int cantidad, String tipo) {
+		Map<String, Object> mapaMap = new HashMap<String, Object>();
+		//clave valor
+		
+		mapaMap.put("Nombre", "Pepa");
+		mapaMap.put("Apellido", "Ortiz");
+		//clave debe coincidir con el nombre del parámetro
+		mapaMap.put("PrecioEntrada", Integer.valueOf(precio).toString());
+		mapaMap.put("Tipo",tipo.toString());
+		mapaMap.put("Cantidad", Integer.valueOf(cantidad).toString());
+		
+		//generar pdf , compile report pilla xml del JasperReport a partir de la ruta
+		try {
+			// "C:\Users\Usuario\JaspersoftWorkspace\DI_VentaEntradas\Entrada_Landscape.jrxml"
+			JasperReport jasperReport = JasperCompileManager.compileReport("C:\\Users\\Usuario\\JaspersoftWorkspace\\DI_VentaEntradas\\Entrada_Landscape.jrxml");
+			System.out.println("se ve?");
+			JasperPrint infoJasperPrint = JasperFillManager.fillReport(jasperReport, mapaMap,new JREmptyDataSource());
+
+			//JR, objec, datasource;
+			JasperViewer.viewReport(infoJasperPrint);
+			
+		} catch (JRException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }
