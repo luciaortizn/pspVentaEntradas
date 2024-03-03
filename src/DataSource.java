@@ -24,20 +24,23 @@ public class DataSource implements JRDataSource {
 
 		switch (nameString) {
 
-		case "Nombre":
+		case "nombre":
 			objeto = listaUsuarios.get(index).getNombre();
 			break;
 
-		case "Apellido":
+		case "apellido":
 			objeto = listaUsuarios.get(index).getApellido();
 
 			break;
-		case "Cantidad":
+		case "cantidadEntrada":
 			objeto = listaUsuarios.get(index).getCantidadEntrada();
 			break;
 
-		case "Tipo":
+		case "tipoEntrada":
 			objeto = listaUsuarios.get(index).getTipoEntrada();
+			break;
+		case "precio":
+			objeto = listaUsuarios.get(index).getPrecio();
 			break;
 
 		}

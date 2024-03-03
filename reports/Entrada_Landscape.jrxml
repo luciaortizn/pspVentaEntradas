@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.1.final using JasperReports Library version 6.21.0-4f56c4f36cd19e17675219a9ac4692d5f0f13b06  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Entrada_Landscape" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f6b99152-30a9-403e-84b9-aeae21a45726">
+	<parameter name="Nombre" class="java.lang.String"/>
+	<parameter name="Apellido" class="java.lang.String"/>
+	<parameter name="Tipo" class="java.lang.String"/>
+	<parameter name="PrecioEntrada" class="java.lang.String"/>
+	<parameter name="Cantidad" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="456" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<image onErrorType="Icon">
+				<reportElement x="-20" y="0" width="842" height="390" uuid="5c285def-dfc2-498f-b5d7-f3421ec8ada0"/>
+				<imageExpression><![CDATA["../PSP_Sockets_2T_Lucia_Ortiz/img/PlantillaPrimaveraSoundGrande.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="40" y="80" width="100" height="30" uuid="41097fd4-1084-4e00-9519-ed0a772bcde2"/>
+				<textElement markup="styled">
+					<font fontName="Verdana"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nombre: "+$P{Nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="80" width="130" height="30" uuid="40896d00-5fc2-4db7-bbb3-17dae0fc815f"/>
+				<textElement>
+					<font fontName="Verdana"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Apellido:"+$P{Apellido}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="130" width="220" height="20" uuid="a322d47d-bc78-4cbd-aecb-80d84ed5d27c"/>
+				<textElement>
+					<font fontName="Verdana Pro Cond"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Tipo de entrada: "+$P{Tipo}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Column">
+				<reportElement x="40" y="110" width="150" height="20" uuid="1e99c0a4-d20b-4088-85c4-6be17b85df52"/>
+				<textElement>
+					<font fontName="Verdana Pro"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Número de entradas:" + $P{Cantidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="150" width="90" height="30" uuid="639d27af-4381-4653-9a91-b810af97e474"/>
+				<textElement>
+					<font fontName="Verdana Pro"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Coste: "+ $P{PrecioEntrada} + "€"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="79" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<image onErrorType="Icon">
+				<reportElement x="-20" y="-86" width="842" height="146" uuid="b0be4524-265d-4f78-909f-e090d4a4a8dc"/>
+				<imageExpression><![CDATA["../PSP_Sockets_2T_Lucia_Ortiz/img/CodigoBarrasPrimaveraSound.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageFooter>
+</jasperReport>

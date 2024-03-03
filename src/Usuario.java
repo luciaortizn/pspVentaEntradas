@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+
+import groovy.lang.Newify;
 
 public class Usuario {
 	
@@ -8,6 +11,11 @@ public class Usuario {
 	private int cantidadEntrada;
 	
 	private String tipoEntrada;
+	
+	private int precio;
+	
+
+
 
 	public String getNombre() {
 		return nombre;
@@ -41,13 +49,29 @@ public class Usuario {
 		this.tipoEntrada = tipoEntrada;
 	}
 
-	public Usuario(String nombre, String apellido, int cantidadEntrada, String tipoEntrada) {
+	public Usuario(String nombre, String apellido, int cantidadEntrada, String tipoEntrada, int precio) {
 		super();
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.cantidadEntrada = cantidadEntrada;
 		this.tipoEntrada = tipoEntrada;
+		this.precio = precio;
 	}
+
+	public int getPrecio() {
+		return precio;
+	}
+
+	public void setPrecio(int precio) {
+		this.precio = precio;
+	}
+
+	@Override
+	public String toString() {
+		return "Usuario [nombre=" + nombre + ", apellido=" + apellido + ", cantidadEntrada=" + cantidadEntrada
+				+ ", tipoEntrada=" + tipoEntrada + ", precio=" + precio + "]";
+	}
+
 	
 	
 

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.1.final using JasperReports Library version 6.21.0-4f56c4f36cd19e17675219a9ac4692d5f0f13b06  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ListUsers" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="240ec728-bb6d-4510-a256-a2539a1042e7">
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="apellido" class="java.lang.String"/>
+	<field name="cantidadEntrada" class="java.lang.Integer"/>
+	<field name="tipoEntrada" class="java.lang.String"/>
+	<field name="precio" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="66" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="220" height="66" uuid="ba6e134d-cb76-44c2-b6c7-e117f0e5ab08"/>
+				<imageExpression><![CDATA["../PSP_Sockets_2T_Lucia_Ortiz/img/logoPrimaveraSound.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="220" y="20" width="230" height="32" uuid="0f410e85-4b3f-49bc-aa40-4f0c9906e85f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="rtf">
+					<font fontName="Bahnschrift" size="16"/>
+				</textElement>
+				<text><![CDATA[Informe de Clientes]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="47" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="190" height="30" uuid="76554f55-4858-439c-a4fe-963449826f84"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre y Apellidos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="0" width="100" height="30" uuid="9e7391c8-093c-410e-9dd8-157e926205f3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="0" width="100" height="30" uuid="5257a86a-d67a-4613-b395-21fff0b8f7ec"/>
+				<textElement markup="html">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de entrada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="0" width="100" height="30" uuid="8136cd7d-7d2b-431a-8ec3-02b08479ea5a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Coste]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="53" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="-3" width="100" height="30" uuid="6b86f1df-fa90-4d36-afa9-d8e9a1e3ee9e"/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="-3" width="100" height="30" uuid="e7397980-7a3f-4420-b580-88d22c30cd4f"/>
+				<textFieldExpression><![CDATA[$F{apellido}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="-3" width="120" height="30" uuid="1f9f2762-6c17-47d4-a859-234795c86ab0"/>
+				<textFieldExpression><![CDATA[$F{cantidadEntrada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="0" width="100" height="30" uuid="997d0c49-14b6-47e8-b9ad-4f4f8453a33b"/>
+				<textFieldExpression><![CDATA[$F{tipoEntrada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="460" y="-3" width="100" height="30" uuid="ac431791-b9b4-4432-a424-5447dfe70431"/>
+				<textFieldExpression><![CDATA[$F{precio} + "€"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

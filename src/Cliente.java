@@ -7,6 +7,18 @@ import java.awt.Font;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
+import javax.swing.plaf.multi.MultiInternalFrameUI;
+
+import com.itextpdf.text.log.SysoCounter;
+
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
+
 import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -22,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Cliente {
 
@@ -33,6 +47,7 @@ public class Cliente {
 	public static Socket socket;
 	public static boolean reservaClicked =false;
 	public static Integer cant;
+	private String selectedOptionString;
 	public int totalEntradas=0;
 
 	/**
@@ -51,14 +66,6 @@ public class Cliente {
 		});
 	}
 
-	/**
-	 * Create the application. Cosas que hacer: -cambiar el combobox a 3 txtfields -
-	 * hacer los correspondientes sockets para : *total y comprar * -
-	 * 
-	 * 
-	 * 
-	 * @throws IOException
-	 */
 	public Cliente() {
 		initialize();
 
@@ -76,9 +83,10 @@ public class Cliente {
 		frame.getContentPane().setLayout(null);
 
 		JPanel panel = new JPanel();
+		panel.setForeground(new Color(0, 0, 0));
 		panel.setLayout(null);
-		panel.setBackground(new Color(128, 128, 192));
-		panel.setBounds(0, 0, 824, 104);
+		panel.setBackground(new Color(0, 0, 0));
+		panel.setBounds(0, 0, 806, 104);
 		frame.getContentPane().add(panel);
 
 		JLabel lblNoQuedanEntradas = new JLabel("Lo sentimos, no quedan entradas. ");
@@ -86,12 +94,31 @@ public class Cliente {
 		JLabel lblNewLabel = new JLabel("Primavera Sound Festival");
 		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setFont(new Font("Nirmala UI Semilight", Font.BOLD, 22));
-		lblNewLabel.setBounds(33, 29, 270, 30);
+		lblNewLabel.setBounds(24, 23, 270, 30);
 		panel.add(lblNewLabel);
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(198, 70, 5, 5);
 		panel.add(tabbedPane);
+		
+		JLabel lblBarcelona = new JLabel("Barcelona 2024");
+		lblBarcelona.setForeground(Color.WHITE);
+		lblBarcelona.setFont(new Font("Nirmala UI Semilight", Font.BOLD, 16));
+		lblBarcelona.setBounds(24, 52, 169, 30);
+		panel.add(lblBarcelona);
+		
+		JLabel lblReservas = new JLabel("Salir");
+		lblReservas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				frame.dispose();
+			}
+		});
+		lblReservas.setForeground(Color.WHITE);
+		lblReservas.setFont(new Font("Nirmala UI Semilight", Font.BOLD, 22));
+		lblReservas.setBounds(698, 34, 72, 30);
+		panel.add(lblReservas);
 
 		JLabel lblVentaDeEntradas = new JLabel("Reserva de entradas");
 		lblVentaDeEntradas.setBackground(new Color(255, 255, 255));
@@ -202,7 +229,8 @@ public class Cliente {
 					outputStream.flush();
 				
 				    socketConfirmar.close();
-					
+		
+				  
 
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -243,8 +271,8 @@ public class Cliente {
 					
 					if (cont <= 1) {
 						cant = Integer.parseInt(comboBox_cant.getModel().getSelectedItem().toString());
-						String selectedString = comboBox.getModel().getSelectedItem().toString();
-						listaTicketStrings.add(selectedString);	
+						selectedOptionString = comboBox.getModel().getSelectedItem().toString();
+						listaTicketStrings.add(selectedOptionString);	
 						
 
 					} else {
@@ -277,6 +305,10 @@ public class Cliente {
 			
 		
 	}
+	
+	
+	
+	
 	
 	
 }
