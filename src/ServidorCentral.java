@@ -42,6 +42,12 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * Maneja el servidor que gestiona los cambios en las compras de las entradas
+ * 
+ * @author Lucia Ortiz
+ *
+ */
 public class ServidorCentral {
 
 	private JFrame frame;
@@ -73,7 +79,7 @@ public class ServidorCentral {
 	}
 
 	/**
-	 * Create the application.
+	 * Crea la aplicación.
 	 */
 	public ServidorCentral() {
 		initialize();
@@ -89,6 +95,9 @@ public class ServidorCentral {
 		}).start();
 	}
 
+	/**
+	 * Inicializa la vista.
+	 */
 	private void initialize() {
 
 		frame = new JFrame();
@@ -202,7 +211,7 @@ public class ServidorCentral {
 		txtAVip.setColumns(10);
 		txtAVip.setBounds(493, 335, 53, 20);
 		frame.getContentPane().add(txtAVip);
-		
+
 		JLabel lblEmptyList = new JLabel("No existen usuarios registrados en el evento.");
 		lblEmptyList.setFont(new Font("Nirmala UI", Font.PLAIN, 11));
 		lblEmptyList.setBounds(247, 389, 253, 14);
@@ -212,18 +221,24 @@ public class ServidorCentral {
 		JButton btnReporteLista = new JButton("Generar Informe");
 		btnReporteLista.setForeground(new Color(255, 255, 255));
 		btnReporteLista.setBackground(new Color(0, 0, 0));
-	
+
 		btnReporteLista.addActionListener(new ActionListener() {
+			/**
+			 * Método de evento que se llama cuando se hace click. En este caso, se intenta
+			 * generar un informe de usuarios si la lista de usuarios no está vacía.
+			 * 
+			 * @param e Objeto ActionEvent que representa el evento de acción.
+			 */
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-					if(!userArrayList.isEmpty()) {
+					if (!userArrayList.isEmpty()) {
 						lblEmptyList.setVisible(false);
 						generarInformeUsuarios(userArrayList);
-					}else{
+					} else {
 						lblEmptyList.setVisible(true);
 					}
-					
+
 				} catch (JRException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -233,15 +248,21 @@ public class ServidorCentral {
 		});
 		btnReporteLista.setBounds(510, 376, 143, 40);
 		frame.getContentPane().add(btnReporteLista);
-		
-		
 
 	}
 
+	/**
+	 * Manda el stream que corresponde al total de entradas a la clase Cliente con
+	 * el BufferedWriter.
+	 * 
+	 * 
+	 * @param cliente El Socket usuario actual conectado al servidor
+	 * @throws IOException El error que se produce cuando hay problemas de lectura
+	 *                     en el socket
+	 */
 	public synchronized void mandarTotalEntradas(Socket cliente) throws IOException {
 
 		OutputStream outputStream = cliente.getOutputStream();
-		// ¿¿?también se puede hacer con el buffered reader : new bufferedReader.write
 		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
 		BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
 
@@ -251,12 +272,25 @@ public class ServidorCentral {
 		bufferedWriter.flush();
 	}
 
+	/**
+	 * Cambia el label de factuación total en la ventana JSwing del servidor
+	 * 
+	 * @param cantidad El valor de facturación total.
+	 */
 	public synchronized static void cambiarFT(int cantidad) {
 		int totalString = (Integer.parseInt(lblFT_int.getText().toString()) + cantidad);
 		lblFT_int.setText(totalString + "");
 
 	}
 
+	/**
+	 * Crea una conexión y permite a los clientes conectarse mediante ServerSocket y
+	 * Socket, además de leer la primera línea para saber si se recibe o envía
+	 * información.
+	 * 
+	 * @throws IOException El error que se produce cuando hay problemas de
+	 *                     lectura/escritura en el socket.
+	 */
 	private void startServer() throws IOException {
 		ServerSocket serverSocket = new ServerSocket(123);
 
@@ -283,6 +317,18 @@ public class ServidorCentral {
 
 	}
 
+	/**
+	 * Cambia el total de cada campo de entrada según lo que se lee del
+	 * BufferedReader.
+	 * 
+	 * @param socket         El Socket usuario actual conectado al servidor.
+	 * @param bufferedReader El BufferedReader desde el cual se leerán las líneas.
+	 * @param txt1           El campo de texto para el 1º tipo de entrada.
+	 * @param txt2           El campo de texto para el 2º tipo de entrada.
+	 * @param txt3           El campo de texto para el 3º tipo de entrada.
+	 * @throws IOException El error que se produce cuando hay problemas de
+	 *                     lectura/escritura en el socket.
+	 */
 	public static void cambiarTotal(Socket socket, BufferedReader bufferedReader, JTextField txt1, JTextField txt2,
 			JTextField txt3) throws IOException {
 
@@ -290,7 +336,6 @@ public class ServidorCentral {
 		int cantidad;
 		String tipoEntradaString = bufferedReader.readLine();
 		String entradaSinCorchetes = tipoEntradaString.replace("[", "").replace("]", "").trim();
-		// System.out.println(tipoEntradaString);
 		cantidad = Integer.parseInt(bufferedReader.readLine());
 		String tipo = "";
 		int nuevoTotal = Integer.valueOf(Integer.parseInt(lblTotalEntradas.getText().trim()) - cantidad);
@@ -334,21 +379,35 @@ public class ServidorCentral {
 		lock.unlock();
 	}
 
+	/**
+	 * Genera el informe JasperSoft para una lista de usuarios que han comprado una
+	 * entrada.
+	 * 
+	 * @param lista Una Arraylist de Usuarios la cual es el parámetro de dataSource.
+	 * @throws JRException Si ocurre un error específico de JasperReports al generar
+	 *                     el reporte.
+	 */
 	public static void generarInformeUsuarios(ArrayList<Usuario> lista) throws JRException {
 
-		
 		DataSource dataSource = new DataSource(lista);
 		System.out.println("Lista:" + lista.toString() + " o " + lista.get(0).toString());
 
-		//ruta relativa ../PSP_Sockets_2T_Lucia_Ortiz/reports/ListUsers.jrxml
-		//ruta completa desde jasper: C:\\Users\\Usuario\\JaspersoftWorkspace\\DI_VentaEntradas\\ListUsers.jrxml
+		// ruta relativa ../PSP_Sockets_2T_Lucia_Ortiz/reports/ListUsers.jrxml
+		// ruta completa desde jasper:
+		// C:\\Users\\Usuario\\JaspersoftWorkspace\\DI_VentaEntradas\\ListUsers.jrxml
 		JasperReport jasperReport = JasperCompileManager
 				.compileReport("../PSP_Sockets_2T_Lucia_Ortiz/reports/ListUsers.jrxml");
-					
+
 		JasperPrint infoJasperPrint = JasperFillManager.fillReport(jasperReport, null, dataSource);
 		JasperViewer.viewReport(infoJasperPrint);
 	}
 
+	/**
+	 * 
+	 * @param cantidadEntrada
+	 * @param tipoEntrada
+	 * @param precio
+	 */
 	private static void mostrarVentanaEmergente(int cantidadEntrada, String tipoEntrada, int precio) {
 
 		ReentrantLock lock = new ReentrantLock();
@@ -406,7 +465,6 @@ public class ServidorCentral {
 		panel.add(lblDescripcion);
 		ventanaEmergente.setVisible(true);
 
-
 		btnGuardar.addActionListener(e -> {
 
 			// Confirmar y meter en la lista
@@ -416,7 +474,8 @@ public class ServidorCentral {
 
 			lock.lock();
 
-			Usuario nuevoUsuario = new Usuario(nombre, apellido, cantidadEntrada, tipoEntrada, precio*cantidadEntrada);
+			Usuario nuevoUsuario = new Usuario(nombre, apellido, cantidadEntrada, tipoEntrada,
+					precio * cantidadEntrada);
 			ServidorCentral.userArrayList.add(nuevoUsuario);
 			generarPDF(nuevoUsuario); // si se imprime
 			System.out.println(ServidorCentral.userArrayList.toString());
@@ -427,6 +486,10 @@ public class ServidorCentral {
 
 	}
 
+	/**
+	 * 
+	 * @param user
+	 */
 	public static void generarPDF(Usuario user) {
 		Map<String, Object> mapaMap = new HashMap<String, Object>();
 
@@ -438,23 +501,22 @@ public class ServidorCentral {
 		mapaMap.put("Tipo", user.getTipoEntrada().toString());
 		mapaMap.put("Cantidad", Integer.valueOf(user.getCantidadEntrada()).toString());
 
-		
 		try {
 			// "C:\Users\Usuario\eclipse-workspace\PSP_Sockets_2T_Lucia_Ortiz\src\ServidorCentral.java"
 
 			// "C:\Users\Usuario\eclipse-workspace\PSP_Sockets_2T_Lucia_Ortiz\\reports\\Entrada_Landscape.jrxml"
-			//absoluta del jasper: C:\\Users\\Usuario\\JaspersoftWorkspace\\DI_VentaEntradas\\Entrada_Landscape.jrxml
-			//relativa:  ../PSP_Sockets_2T_Lucia_Ortiz/reports/Entrada_Landscape.jrxml
-			JasperReport jasperReport = JasperCompileManager.compileReport(
-					"../PSP_Sockets_2T_Lucia_Ortiz/reports/Entrada_Landscape.jrxml");
+			// absoluta del jasper:
+			// C:\\Users\\Usuario\\JaspersoftWorkspace\\DI_VentaEntradas\\Entrada_Landscape.jrxml
+			// relativa: ../PSP_Sockets_2T_Lucia_Ortiz/reports/Entrada_Landscape.jrxml
+			JasperReport jasperReport = JasperCompileManager
+					.compileReport("../PSP_Sockets_2T_Lucia_Ortiz/reports/Entrada_Landscape.jrxml");
 			JasperPrint infoJasperPrint = JasperFillManager.fillReport(jasperReport, mapaMap, new JREmptyDataSource());
-			
+
 			JasperViewer.viewReport(infoJasperPrint);
 		} catch (JRException e1) {
-			
+
 			e1.printStackTrace();
 		}
 	}
-	//ruta imagen completa : "C:/Users/Usuario/eclipse-workspace/PSP_Sockets_2T_Lucia_Ortiz/img/PlantillaPrimaveraSoundGrande.png"
-	//ruta relativa: ../img/PlantillaPrimaveraSoundGrande.png
+
 }

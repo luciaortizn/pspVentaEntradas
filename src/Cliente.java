@@ -6,20 +6,6 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
-import javax.swing.plaf.multi.MultiInternalFrameUI;
-
-import com.itextpdf.text.log.SysoCounter;
-
-import net.sf.jasperreports.engine.JREmptyDataSource;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.view.JasperViewer;
-
-import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -37,6 +23,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * Maneja
+ * 
+ * @author Lucia Ortiz
+ *
+ */
 public class Cliente {
 
 	private JFrame frame;
@@ -45,10 +37,10 @@ public class Cliente {
 	private Timer timer = new Timer();
 	public static ArrayList<String> listaTicketStrings = new ArrayList<>();
 	public static Socket socket;
-	public static boolean reservaClicked =false;
+	public static boolean reservaClicked = false;
 	public static Integer cant;
 	private String selectedOptionString;
-	public int totalEntradas=0;
+	public int totalEntradas = 0;
 
 	/**
 	 * Launch the application.
@@ -66,13 +58,19 @@ public class Cliente {
 		});
 	}
 
+	/**
+	 * Constructor por defecto para la clase Cliente que inicializa la instancia de
+	 * la clase utilizando el método initialize().
+	 */
 	public Cliente() {
 		initialize();
 
 	}
 
-	/**
-	 * Initialize the contents of the frame.
+	/*
+	 * Inicializa la instancia de la clase Cliente. Puede contener la lógica
+	 * necesaria para la configuración inicial de la clase y se llama desde el
+	 * constructor por defecto.
 	 */
 	private void initialize() {
 
@@ -100,18 +98,24 @@ public class Cliente {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(198, 70, 5, 5);
 		panel.add(tabbedPane);
-		
+
 		JLabel lblBarcelona = new JLabel("Barcelona 2024");
 		lblBarcelona.setForeground(Color.WHITE);
 		lblBarcelona.setFont(new Font("Nirmala UI Semilight", Font.BOLD, 16));
 		lblBarcelona.setBounds(24, 52, 169, 30);
 		panel.add(lblBarcelona);
-		
+
 		JLabel lblReservas = new JLabel("Salir");
 		lblReservas.addMouseListener(new MouseAdapter() {
+			/**
+			 * Método de evento que se llama cuando se produce un clic en el JLabel
+			 * lblReservas y produce que se cierre la ventana actual.
+			 * 
+			 * @param e Objeto MouseEvent que representa el evento de click.
+			 */
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+
 				frame.dispose();
 			}
 		});
@@ -139,17 +143,23 @@ public class Cliente {
 		btnNewButton.setForeground(new Color(255, 255, 255));
 		btnNewButton.setBackground(new Color(0, 0, 0));
 		btnNewButton.addActionListener(new ActionListener() {
+			/**
+			 * Método de evento que se llama cuando se hace click en un JButton. En este
+			 * caso, se establece una conexión a un servidor, envía una solicitud, recibe
+			 * una respuesta y actualiza la interfaz según la respuesta.
+			 * 
+			 * @param e Objeto ActionEvent que representa el evento de acción.
+			 */
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-					
+
 					socket = new Socket("localhost", 123);
-					
+
 					OutputStream outputStream = socket.getOutputStream();
-					//para poder recoger el string luego 
 					outputStream.write(("recibir").getBytes());
 					outputStream.write(("\n").getBytes());
-					
+
 					InputStream inputStream = socket.getInputStream();
 					InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 
@@ -157,20 +167,20 @@ public class Cliente {
 					String respuestaDesdeServidor;
 					respuestaDesdeServidor = bufferedReader.readLine();
 					System.out.println(respuestaDesdeServidor);
-					//System.out.println("el total es: " + respuestaDesdeServidor);
 
 					txtTotal.setText(respuestaDesdeServidor);
-					if (Integer.parseInt(respuestaDesdeServidor.toString()) < Integer.parseInt(comboBox_cant.getModel().getSelectedItem().toString()) ) {
+					if (Integer.parseInt(respuestaDesdeServidor.toString()) < Integer
+							.parseInt(comboBox_cant.getModel().getSelectedItem().toString())) {
 						lblNoQuedanEntradas.setVisible(true);
 						btnConfirmar.setEnabled(false);
 						btnReserva.setEnabled(false);
-					}else {
+					} else {
 						btnReserva.setEnabled(true);
 						btnConfirmar.setEnabled(true);
 						lblNoQuedanEntradas.setVisible(false);
 					}
 					socket.close();
-					
+
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -182,7 +192,6 @@ public class Cliente {
 		btnNewButton.setBounds(308, 131, 118, 38);
 		frame.getContentPane().add(btnNewButton);
 
-		
 		btnReserva.setForeground(new Color(255, 255, 255));
 		btnReserva.setBackground(new Color(0, 0, 0));
 
@@ -198,7 +207,6 @@ public class Cliente {
 
 		frame.getContentPane().add(comboBox);
 
-		
 		lblErrorNumEntradas.setForeground(new Color(0, 0, 0));
 		lblErrorNumEntradas.setFont(new Font("Nirmala UI Semilight", Font.PLAIN, 11));
 		lblErrorNumEntradas.setBounds(35, 195, 355, 30);
@@ -206,20 +214,22 @@ public class Cliente {
 		;
 		frame.getContentPane().add(lblErrorNumEntradas);
 
-		
 		btnConfirmar.setForeground(new Color(255, 255, 255));
 		btnConfirmar.setBackground(new Color(0, 0, 0));
 		btnConfirmar.addActionListener(new ActionListener() {
+
+			/**
+			 * Método de evento que se llama cuando se produce una acción en el botón de
+			 * confirmación. En este caso, usa el OutputSream para enbviar los
+			 * 
+			 * @param e Objeto ActionEvent que representa el evento de acción.
+			 */
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-					
-					//está en ese socket y no sale. problema al solicitar total
+
 					Socket socketConfirmar = new Socket("localhost", 123);
-					
-
 					OutputStream outputStream = socketConfirmar.getOutputStream();
-
 					outputStream.write(("mandar").getBytes());
 					outputStream.write("\n".getBytes());
 					outputStream.write((listaTicketStrings.toString()).getBytes());
@@ -227,10 +237,8 @@ public class Cliente {
 					outputStream.write((cant.toString()).getBytes());
 					outputStream.write("\n".getBytes());
 					outputStream.flush();
-				
-				    socketConfirmar.close();
-		
-				  
+
+					socketConfirmar.close();
 
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -256,27 +264,31 @@ public class Cliente {
 		lblTimeout.setVisible(false);
 		frame.getContentPane().add(lblTimeout);
 
-		
 		comboBox_cant.setFont(new Font("Nirmala UI Semilight", Font.PLAIN, 15));
 		comboBox_cant.setBounds(214, 236, 69, 46);
 		comboBox_cant.setModel(new DefaultComboBoxModel<String>(new String[] { "1", "2", "3" }));
 		frame.getContentPane().add(comboBox_cant);
 
 		btnReserva.addActionListener(new ActionListener() {
+			/**
+			 * Método de evento que se llama cuando se produce una acción en el botón de
+			 * reserva.
+			 * 
+			 * @param e Objeto ActionEvent que representa el evento de acción.
+			 */
 			public void actionPerformed(ActionEvent e) {
-				// reserva
+
 				try {
-					activarContador(timer, lblTimeout, frame, btnReserva, btnConfirmar);
+					activarContador(timer, lblTimeout, btnReserva, btnConfirmar);
 					cont++;
-					
+
 					if (cont <= 1) {
 						cant = Integer.parseInt(comboBox_cant.getModel().getSelectedItem().toString());
 						selectedOptionString = comboBox.getModel().getSelectedItem().toString();
-						listaTicketStrings.add(selectedOptionString);	
-						
+						listaTicketStrings.add(selectedOptionString);
 
 					} else {
-						
+
 						lblErrorNumEntradas.setVisible(true);
 						btnReserva.setEnabled(false);
 						btnConfirmar.setEnabled(false);
@@ -290,25 +302,30 @@ public class Cliente {
 		});
 	}
 
-	private static void activarContador(Timer timer, JLabel lblTimeout, JFrame frame, JButton reserva, JButton confirmar) {
+	/**
+	 * Activa un contador para controlar el tiempo de espera que transcurre hasta
+	 * que no deja reservar y comprar las entradas.
+	 * 
+	 * @param timer      El objeto Timer utilizado para programar la tarea.
+	 * @param lblTimeout El JLabel que se mostrará cuando se acabe el tiempo.
+	 * @param reserva    El JButton de reserva que se desactiva cuando se acaba el
+	 *                   tiempo.
+	 * @param confirmar  El JButton de confirmación que se desactiva cuando se acaba
+	 *                   el tiempo.
+	 */
+	private static void activarContador(Timer timer, JLabel lblTimeout, JButton reserva, JButton confirmar) {
 
-			timer.schedule(new TimerTask() {
+		timer.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
 				lblTimeout.setVisible(true);
 				confirmar.setEnabled(false);
 				reserva.setEnabled(false);
-				
+
 			}
-		},120 * 1000);
-			
-		
+		}, 120 * 1000);
+
 	}
-	
-	
-	
-	
-	
-	
+
 }
